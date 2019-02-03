@@ -4,10 +4,10 @@ let tabsComponent = new Tabs({
   element: document.querySelector(".container")
 });
 
-let tabsElement = document.querySelector("tabs");
+let tabsElemnt = document.querySelector(".container");
 
-tabsElement.addEventListener("tab-selected", event => {
+tabsElemnt.addEventListener("tab-selected", event => {
   let { title } = event.detail;
-  
+
   console.log(title);
 });

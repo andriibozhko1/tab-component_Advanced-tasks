@@ -4,12 +4,11 @@ export default class Tabs {
     this.tabsArr = [];
     this.tabs = [...this.element.querySelectorAll("tabs")];
 
-    
     this.createTabObj();
     this.render();
     this.addEvents();
   }
-  
+
   createTabObj() {
     this.tabs.map(item => {
       let tab = [...item.querySelectorAll("tab")];
@@ -47,15 +46,21 @@ export default class Tabs {
             ${tabsHeaderName
               .map(title => {
                 return `
-                  <tab class="tabs__tab ${tab[title].isActive === true ? 'tabs__tab--active' : ''}" data-title="${title}">${title}</tab>
-            `;}).join("")}
+                  <tab class="tabs__tab ${
+                    tab[title].isActive === true ? "tabs__tab--active" : ""
+                  }" data-title="${title}">${title}</tab>
+            `;
+              })
+              .join("")}
             </div>
             <div class="tabs__content">
-              ${tabsHeaderName.map(title => {
-                if(tab[title].isActive) {
-                  return tab[title].content
-                }
-              }).join('')}
+              ${tabsHeaderName
+                .map(title => {
+                  if (tab[title].isActive) {
+                    return tab[title].content;
+                  }
+                })
+                .join("")}
             </div>
           </tabs>
         `;
@@ -66,42 +71,39 @@ export default class Tabs {
 
   getCurrentTabData(id) {
     let tabsName = Object.keys(this.tabsArr[id]);
-    for(let i = 0; i < tabsName.length; i++) {
-      if(this.tabsArr[id][tabsName[i]].isActive) {
+    for (let i = 0; i < tabsName.length; i++) {
+      if (this.tabsArr[id][tabsName[i]].isActive) {
         return this.tabsArr[id][tabsName[i]];
       }
     }
   }
 
   addEvents() {
-    let id;
-    let event
-    this.on('click','tabs', (e) => {
-      id = e.dataset.elementId;
-    });    
+    this.on("click", "tabs__tab", e => {
+      let id = e.closest(".tabs").dataset.elementId;
 
-    this.on('click', 'tabs__tab', (e) => {
       this.getCurrentTabData(id).isActive = false;
       this.tabsArr[id][e.dataset.title].isActive = true;
 
-      this.render();
-    })
-    this.on('click', 'tabs', (e) => {
-      event = new CustomEvent('tab-selected', {
+
+      
+      let event = new CustomEvent("tab-selected", {
         detail: {
           title: this.getCurrentTabData(id).title,
-          content: this.getCurrentTabData(id).content,
+          content: this.getCurrentTabData(id).content
         }
       });
-      e.dispatchEvent(event);
-    })
+
+      this.element.dispatchEvent(event);
+      this.render();
+    });
   }
 
   on(eventName, className, callBack) {
-    this.element.addEventListener(eventName,(e) => {
-      if(e.target.closest(`.${className}`)) {
+    this.element.addEventListener(eventName, e => {
+      if (e.target.closest(`.${className}`)) {
         callBack(e.target.closest(`.${className}`));
       }
-    })
+    });
   }
 }

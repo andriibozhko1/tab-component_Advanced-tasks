@@ -79,30 +79,36 @@ export default class Tabs {
   }
 
   addEvents() {
-    this.on("click", "tabs__tab", e => {
-      let id = e.closest(".tabs").dataset.elementId;
+    this.on("click", "tabs__tab", event => {
+      let id = event.closest(".tabs").dataset.elementId;
 
       this.getCurrentTabData(id).isActive = false;
-      this.tabsArr[id][e.dataset.title].isActive = true;
+      this.tabsArr[id][event.dataset.title].isActive = true;
 
-
-      
-      let event = new CustomEvent("tab-selected", {
+      let customEvent = new CustomEvent("tab-selected", {
         detail: {
           title: this.getCurrentTabData(id).title,
           content: this.getCurrentTabData(id).content
         }
       });
+      
+      let tabsElemnt = document.querySelector("tabs");
 
-      this.element.dispatchEvent(event);
+      tabsElemnt.addEventListener("tab-selected", event => {
+        let { title } = event.detail;
+
+        console.log(title);
+      });
+
+      event.closest(".tabs").dispatchEvent(customEvent);
       this.render();
     });
   }
 
   on(eventName, className, callBack) {
-    this.element.addEventListener(eventName, e => {
-      if (e.target.closest(`.${className}`)) {
-        callBack(e.target.closest(`.${className}`));
+    this.element.addEventListener(eventName, event => {
+      if (event.target.closest(`.${className}`)) {
+        callBack(event.target.closest(`.${className}`));
       }
     });
   }

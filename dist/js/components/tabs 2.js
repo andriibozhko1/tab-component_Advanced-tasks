@@ -92,9 +92,8 @@ export default class Tabs {
         }
       });
       
-      let tabsElemnt = document.querySelector("tabs");
-
-      tabsElemnt.addEventListener("tab-selected", event => {
+      let tabsElement = document.querySelector("tabs");
+      tabsElement.addEventListener("tab-selected", event => {
         let { title } = event.detail;
 
         console.log(title);
